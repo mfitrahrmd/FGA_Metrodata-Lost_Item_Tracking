@@ -1,11 +1,12 @@
 using System.Reflection;
+using Application.Context;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Action = Domain.Entities.Action;
 
 namespace Persistence.Context;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
