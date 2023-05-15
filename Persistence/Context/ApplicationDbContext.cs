@@ -20,14 +20,46 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        
+
+        modelBuilder.Entity<Employee>()
+            .Property(e => e.Nik)
+            .HasColumnType("char(5)");
+        modelBuilder.Entity<Employee>()
+            .Property(e => e.FirstName)
+            .HasColumnType("varchar(50)");
+        modelBuilder.Entity<Employee>()
+            .Property(e => e.LastName)
+            .HasColumnType("varchar(50)");
+        modelBuilder.Entity<Employee>()
+            .Property(e => e.Email)
+            .HasColumnType("varchar(50)");
+        modelBuilder.Entity<Employee>()
+            .Property(e => e.PhoneNumber)
+            .HasColumnType("varchar(50)");
+        modelBuilder.Entity<Employee>()
+            .HasIndex(e => e.Email)
+            .IsUnique();
+        modelBuilder.Entity<Employee>()
+            .HasIndex(e => e.PhoneNumber)
+            .IsUnique();
         modelBuilder.Entity<Employee>()
             .HasKey(e => e.Id);
+        modelBuilder.Entity<Employee>()
+            .HasAlternateKey(e => e.Nik);
         modelBuilder.Entity<Employee>()
             .HasMany(e => e.Items)
             .WithOne(i => i.Employee)
             .HasForeignKey(i => i.EmployeeId);
 
+        modelBuilder.Entity<Item>()
+            .Property(i => i.Name)
+            .HasColumnType("varchar(100)");
+        modelBuilder.Entity<Item>()
+            .Property(i => i.ImagePath)
+            .HasColumnType("text");
+        modelBuilder.Entity<Item>()
+            .Property(i => i.Description)
+            .HasColumnType("text");
         modelBuilder.Entity<Item>()
             .HasKey(i => i.Id);
         modelBuilder.Entity<Item>()
@@ -39,6 +71,11 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .WithOne(ia => ia.Item)
             .HasForeignKey(ia => ia.ItemId);
 
+        modelBuilder.Entity<Action>()
+            .Property(a => a.Name).HasColumnType("varchar(20)");
+        modelBuilder.Entity<Action>()
+            .HasIndex(a => a.Name)
+            .IsUnique();
         modelBuilder.Entity<Action>()
             .HasKey(a => a.Id);
         modelBuilder.Entity<Action>()
