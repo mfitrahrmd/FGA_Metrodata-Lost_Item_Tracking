@@ -12,7 +12,7 @@ public static class ConfigureServices
     public static IServiceCollection AddPersistenceInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("SqlServer"),
-            builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+            builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)).UseSnakeCaseNamingConvention());
 
         services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         
