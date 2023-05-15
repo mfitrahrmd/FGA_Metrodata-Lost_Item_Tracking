@@ -4,6 +4,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{1DF1CCBF-9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{0F2A1F3C-0FD4-4028-A99C-1DEE838E7A3D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{389C9DE9-9AEB-491F-9B6E-D0E2313299A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
