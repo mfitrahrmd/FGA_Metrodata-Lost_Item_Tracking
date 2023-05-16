@@ -16,7 +16,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Item> Items { get; set; }
     public DbSet<Action> Actions { get; set; }
     public DbSet<ItemActions> ItemActions { get; set; }
-    
+    public DbSet<Department> Departments { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -50,6 +51,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .HasMany(e => e.Items)
             .WithOne(i => i.Employee)
             .HasForeignKey(i => i.EmployeeId);
+        modelBuilder.Entity<Employee>()
+            .HasOne<Department>(e => e.Department)
+            .WithMany(d => d.Employees)
+            .HasForeignKey(e => e.DepartmentId);
 
         modelBuilder.Entity<Item>()
             .Property(i => i.Name)
@@ -72,7 +77,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .HasForeignKey(ia => ia.ItemId);
 
         modelBuilder.Entity<Action>()
-            .Property(a => a.Name).HasColumnType("varchar(20)");
+            .Property(a => a.Name)
+            .HasColumnType("varchar(20)");
         modelBuilder.Entity<Action>()
             .HasIndex(a => a.Name)
             .IsUnique();
@@ -93,6 +99,14 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .HasOne<Action>(ia => ia.Action)
             .WithMany(i => i.ItemActions)
             .HasForeignKey(ia => ia.ActionId);
+
+        modelBuilder.Entity<Department>()
+            .Property(d => d.Name)
+            .HasColumnType("varchar(50)");
+        modelBuilder.Entity<Department>()
+            .HasMany<Employee>(d => d.Employees)
+            .WithOne(e => e.Department)
+            .HasForeignKey(e => e.DepartmentId);
 
         base.OnModelCreating(modelBuilder);
     }

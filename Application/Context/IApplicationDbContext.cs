@@ -10,4 +10,5 @@ public interface IApplicationDbContext
     DbSet<Item> Items { get; set; }
     DbSet<Action> Actions { get; set; }
     DbSet<ItemActions> ItemActions { get; set; }
+    DbSet<Department> Departments { get; set; }
 }
