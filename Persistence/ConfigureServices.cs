@@ -15,6 +15,7 @@ public static class ConfigureServices
             builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)).UseSnakeCaseNamingConvention());
 
         services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        services.AddScoped<IAccountRepository, AccountRepository>();
         
         return services;
     }
