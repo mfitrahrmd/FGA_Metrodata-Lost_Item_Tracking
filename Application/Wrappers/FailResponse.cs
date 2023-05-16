@@ -1,3 +1,5 @@
+using Application.Wrappers.Common;
+
 namespace Application.Wrappers;
 
 public class FailResponse<TError> : BaseResponse
