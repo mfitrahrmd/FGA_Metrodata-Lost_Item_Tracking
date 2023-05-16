@@ -12,4 +12,6 @@ public interface IApplicationDbContext
     DbSet<ItemActions> ItemActions { get; set; }
     DbSet<Department> Departments { get; set; }
     DbSet<Account> Accounts { get; set; }
+    DbSet<Role> Roles { get; set; }
+    DbSet<AccountRoles> AccountRoles { get; set; }
 }

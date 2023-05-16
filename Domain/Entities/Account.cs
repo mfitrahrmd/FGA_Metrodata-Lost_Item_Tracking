@@ -6,4 +6,5 @@ public class Account
     public string Password { get; set; }
     
     public virtual Employee? Employee { get; set; }
+    public virtual ICollection<AccountRoles>? AccountRoles { get; set; }
 }

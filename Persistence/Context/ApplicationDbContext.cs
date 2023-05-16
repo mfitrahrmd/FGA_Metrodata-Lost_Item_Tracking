@@ -18,6 +18,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<ItemActions> ItemActions { get; set; }
     public DbSet<Department> Departments { get; set; }
     public DbSet<Account> Accounts { get; set; }
+    public DbSet<Role> Roles { get; set; }
+    public DbSet<AccountRoles> AccountRoles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -124,7 +126,32 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .HasOne<Employee>(a => a.Employee)
             .WithOne(e => e.Account)
             .HasForeignKey<Account>(a => a.EmployeeId);
+        modelBuilder.Entity<Account>()
+            .HasMany<AccountRoles>(a => a.AccountRoles)
+            .WithOne(ar => ar.Account)
+            .HasForeignKey(ar => ar.AccountId);
 
+        modelBuilder.Entity<Role>()
+            .HasKey(r => r.Id);
+        modelBuilder.Entity<Role>()
+            .Property(r => r.Name)
+            .HasColumnType("varchar(50)");
+        modelBuilder.Entity<Role>()
+            .HasMany<AccountRoles>(r => r.AccountRoles)
+            .WithOne(ar => ar.Role)
+            .HasForeignKey(ar => ar.RoleId);
+
+        modelBuilder.Entity<AccountRoles>()
+            .HasKey(ar => ar.Id);
+        modelBuilder.Entity<AccountRoles>()
+            .HasOne<Account>(ar => ar.Account)
+            .WithMany(a => a.AccountRoles)
+            .HasForeignKey(ar => ar.AccountId);
+        modelBuilder.Entity<AccountRoles>()
+            .HasOne<Role>(ar => ar.Role)
+            .WithMany(r => r.AccountRoles)
+            .HasForeignKey(ar => ar.RoleId);
+        
         base.OnModelCreating(modelBuilder);
     }
 }
