@@ -1,6 +1,8 @@
+using Domain.Common;
+
 namespace Domain.Entities;
 
-public class Account
+public class Account : BaseEntity
 {
     public Guid EmployeeId { get; set; }
     public string Password { get; set; }

@@ -130,6 +130,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .HasMany<AccountRoles>(a => a.AccountRoles)
             .WithOne(ar => ar.Account)
             .HasForeignKey(ar => ar.AccountId);
+        modelBuilder.Entity<Account>()
+            .Ignore(a => a.Id);
 
         modelBuilder.Entity<Role>()
             .HasKey(r => r.Id);
