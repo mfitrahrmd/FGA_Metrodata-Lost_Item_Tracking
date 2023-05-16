@@ -1,3 +1,4 @@
+using Identity;
 using Persistence;
 using RESTAPI;
 
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationServices();
 builder.Services.AddPersistenceInfrastructure(builder.Configuration);
+builder.Services.AddIdentityInfrastructure(builder.Configuration);
 builder.Services.AddRESTAPIServices(builder.Configuration);
 
 var app = builder.Build();
@@ -21,6 +23,7 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

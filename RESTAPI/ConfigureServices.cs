@@ -1,4 +1,7 @@
+using System.Text;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace RESTAPI;
 
@@ -21,5 +24,23 @@ public static class ConfigureServices
         {
             options.LowercaseUrls = true;
         });
+        
+        // Authentication JWT
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new()
+                {
+                    ClockSkew = TimeSpan.Zero,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = configuration.GetValue<string>("JWT:Issuer"),
+                    ValidAudience = configuration.GetValue<string>("JWT:Audience"),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("JWT:Key")))
+                };
+            });
     }
 }
