@@ -44,6 +44,24 @@ namespace Persistence.Migrations
                     b.ToTable("actions", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.Department", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_departments");
+
+                    b.ToTable("departments", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entities.Employee", b =>
                 {
                     b.Property<Guid>("Id")
@@ -54,6 +72,10 @@ namespace Persistence.Migrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("birth_date");
+
+                    b.Property<Guid>("DepartmentId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("department_id");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -87,6 +109,9 @@ namespace Persistence.Migrations
 
                     b.HasAlternateKey("Nik")
                         .HasName("ak_employees_nik");
+
+                    b.HasIndex("DepartmentId")
+                        .HasDatabaseName("ix_employees_department_id");
 
                     b.HasIndex("Email")
                         .IsUnique()
@@ -164,6 +189,18 @@ namespace Persistence.Migrations
                     b.ToTable("item_actions", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.Employee", b =>
+                {
+                    b.HasOne("Domain.Entities.Department", "Department")
+                        .WithMany("Employees")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_employees_departments_department_id");
+
+                    b.Navigation("Department");
+                });
+
             modelBuilder.Entity("Domain.Entities.Item", b =>
                 {
                     b.HasOne("Domain.Entities.Employee", "Employee")
@@ -200,6 +237,11 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Entities.Action", b =>
                 {
                     b.Navigation("ItemActions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Department", b =>
+                {
+                    b.Navigation("Employees");
                 });
 
             modelBuilder.Entity("Domain.Entities.Employee", b =>
