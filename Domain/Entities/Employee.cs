@@ -14,6 +14,7 @@ public class Employee : BaseEntity
     public string? PhoneNumber { get; set; }
     public Guid DepartmentId { get; set; }
     
-    public virtual Department Department { get; set; }
+    public virtual Department? Department { get; set; }
     public virtual ICollection<Item>? Items { get; set; }
+    public virtual Account Account { get; set; }
 }

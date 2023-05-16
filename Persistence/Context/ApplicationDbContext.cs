@@ -17,6 +17,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Action> Actions { get; set; }
     public DbSet<ItemActions> ItemActions { get; set; }
     public DbSet<Department> Departments { get; set; }
+    public DbSet<Account> Accounts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -55,6 +56,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .HasOne<Department>(e => e.Department)
             .WithMany(d => d.Employees)
             .HasForeignKey(e => e.DepartmentId);
+        modelBuilder.Entity<Employee>()
+            .HasOne<Account>(e => e.Account)
+            .WithOne(a => a.Employee)
+            .HasForeignKey<Account>(a => a.EmployeeId);
 
         modelBuilder.Entity<Item>()
             .Property(i => i.Name)
@@ -101,12 +106,24 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .HasForeignKey(ia => ia.ActionId);
 
         modelBuilder.Entity<Department>()
+            .HasKey(d => d.Id);
+        modelBuilder.Entity<Department>()
             .Property(d => d.Name)
             .HasColumnType("varchar(50)");
         modelBuilder.Entity<Department>()
             .HasMany<Employee>(d => d.Employees)
             .WithOne(e => e.Department)
             .HasForeignKey(e => e.DepartmentId);
+
+        modelBuilder.Entity<Account>()
+            .HasKey(a => a.EmployeeId);
+        modelBuilder.Entity<Account>()
+            .Property(a => a.Password)
+            .HasColumnType("text");
+        modelBuilder.Entity<Account>()
+            .HasOne<Employee>(a => a.Employee)
+            .WithOne(e => e.Account)
+            .HasForeignKey<Account>(a => a.EmployeeId);
 
         base.OnModelCreating(modelBuilder);
     }
