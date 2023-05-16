@@ -51,13 +51,13 @@ public class EmployeesController : ControllerBase
             await _employeeRepository.InsertOneAsync(_mapper.Map<Employee>(request));
 
             response = new SuccessResponse<EmployeeDTO>(null,
-                _mapper.Map<EmployeeDTO>(_mapper.Map<Employee>(request)));
+                _mapper.Map<EmployeeDTO>(_mapper.Map<Employee>(request)), (int)HttpStatusCode.Created);
         }
         catch (Exception e)
         {
             return StatusCode((int)HttpStatusCode.InternalServerError, new FailResponse<object>(e.Message));
         }
 
-        return Ok(response);
+        return Created("", response);
     }
 }
