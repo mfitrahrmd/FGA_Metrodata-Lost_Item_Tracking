@@ -1,4 +1,5 @@
 using Application.Repositories;
+using Application.Wrappers;
 using AutoMapper;
 using Domain.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -18,5 +19,13 @@ public abstract class BaseController<TEntity, TRepository, TDTO, TInsertOneReq> 
     {
         _repository = repository;
         _mapper = mapper;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<SuccessResponse<ICollection<TDTO>>>> FindAllAsync()
+    {
+        var entities = await _repository.FindAllAsync();
+
+        return Ok(new SuccessResponse<ICollection<TDTO>>(null, _mapper.Map<ICollection<TDTO>>(entities)));
     }
 }
