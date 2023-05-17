@@ -8,7 +8,7 @@ public class Profiles : Profile
 {
     public Profiles()
     {
-        CreateMap<InsertOneRequest, Employee>();
+        CreateMap<InsertOneEmployeeRequest, Employee>();
         CreateMap<Employee, EmployeeDTO>();
     }
 }
