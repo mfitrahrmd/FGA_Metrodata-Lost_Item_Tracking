@@ -10,4 +10,9 @@ public class EmployeeRepository : BaseRepository<Employee, ApplicationDbContext>
     public EmployeeRepository(ApplicationDbContext context) : base(context)
     {
     }
+
+    public async Task<Employee?> FindOneByNikIncludeAccount(string Nik)
+    {
+        return await _set.Include(e => e.Account).FirstOrDefaultAsync(e => e.Nik.Equals(Nik));
+    }
 }
