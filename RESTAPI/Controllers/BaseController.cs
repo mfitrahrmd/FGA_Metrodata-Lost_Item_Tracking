@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace RESTAPI.Controllers;
 
+[ApiController]
+[Route("api/[controller]")]
 public abstract class BaseController<TEntity, TRepository, TDTO, TInsertOneReq> : ControllerBase
     where TEntity : BaseEntity
     where TRepository : IBaseRepository<TEntity>
