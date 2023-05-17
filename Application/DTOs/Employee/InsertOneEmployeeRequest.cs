@@ -3,7 +3,7 @@ using Domain.Enums;
 
 namespace Application.DTOs.Employee;
 
-public class InsertOneRequest
+public class InsertOneEmployeeRequest
 {
     public string Nik { get; set; }
     public string FirstName { get; set; }
