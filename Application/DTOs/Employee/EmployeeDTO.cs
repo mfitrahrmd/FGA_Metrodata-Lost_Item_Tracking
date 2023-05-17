@@ -13,4 +13,5 @@ public class EmployeeDTO
     [EnumDataType(typeof(Gender))] public Gender Gender { get; set; }
     public string Email { get; set; }
     public string PhoneNumber { get; set; }
+    public Guid DepartmentId { get; set; }
 }
