@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using RESTAPI.Filters;
 
 #endregion
 
@@ -14,7 +15,14 @@ public static class ConfigureServices
 {
     public static void AddRESTAPIServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddControllers().AddJsonOptions(options =>
+        // Initialize static files directory
+        Directory.CreateDirectory(configuration["Application:ItemPhotosPath"]);
+        
+        services.AddControllers(options =>
+            {
+                options.Filters.Add<ResultFilter>();
+            })
+            .AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.DefaultIgnoreCondition =
                 JsonIgnoreCondition.WhenWritingNull;
