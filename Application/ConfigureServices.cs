@@ -2,6 +2,7 @@
 
 using System.Reflection;
 using Application.Services.Account;
+using Application.Services.Item;
 
 #endregion
 
@@ -13,6 +14,7 @@ public static class ConfigureServices
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.AddScoped<AccountService>();
+        services.AddScoped<ItemService>();
 
         return services;
     }
