@@ -11,7 +11,7 @@ public interface IBaseRepository<TEntity>
 {
     Task InsertOneAsync(TEntity entity);
     Task UpdateOneAsync(TEntity entity);
-    Task DeleteOneAsync(TEntity entity);
+    Task DeleteOneByIdAsync(Guid id);
     Task<TEntity?> FindOneByIdAsync(Guid id);
     Task<ICollection<TEntity>> FindAllAsync();
     Task<bool> IsExistAsync(Guid id);

@@ -35,9 +35,11 @@ public class BaseRepository<TEntity, TContext> : IBaseRepository<TEntity>
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteOneAsync(TEntity entity)
+    public async Task DeleteOneByIdAsync(Guid id)
     {
-        _set.Remove(entity);
+        var foundEntity = await _set.FindAsync(id);
+
+        _set.Remove(foundEntity);
 
         await _context.SaveChangesAsync();
     }
