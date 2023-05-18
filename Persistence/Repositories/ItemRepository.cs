@@ -1,7 +1,10 @@
-using Application.Context;
+#region
+
 using Application.Repositories;
 using Domain.Entities;
 using Persistence.Context;
+
+#endregion
 
 namespace Persistence.Repositories;
 

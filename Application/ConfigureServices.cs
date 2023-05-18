@@ -1,5 +1,9 @@
+#region
+
 using System.Reflection;
 using Application.Services.Account;
+
+#endregion
 
 namespace Microsoft.Extensions.DependencyInjection;
 

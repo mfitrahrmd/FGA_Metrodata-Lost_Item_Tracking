@@ -1,6 +1,10 @@
+#region
+
 using Identity.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
+#endregion
 
 namespace Identity;
 

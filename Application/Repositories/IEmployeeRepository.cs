@@ -1,4 +1,8 @@
+#region
+
 using Domain.Entities;
+
+#endregion
 
 namespace Application.Repositories;
 

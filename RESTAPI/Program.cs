@@ -1,6 +1,10 @@
+#region
+
 using Identity;
 using Persistence;
 using RESTAPI;
+
+#endregion
 
 var builder = WebApplication.CreateBuilder(args);
 

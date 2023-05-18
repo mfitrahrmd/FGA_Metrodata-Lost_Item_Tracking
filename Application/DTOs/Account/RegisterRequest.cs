@@ -1,4 +1,8 @@
+#region
+
 using Domain.Enums;
+
+#endregion
 
 namespace Application.DTOs.Account;
 

@@ -1,3 +1,5 @@
+#region
+
 using Application.DTOs.Account;
 using Application.Exceptions;
 using Application.Repositories;
@@ -6,6 +8,8 @@ using Application.Wrappers;
 using AutoMapper;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+
+#endregion
 
 namespace RESTAPI.Controllers;
 

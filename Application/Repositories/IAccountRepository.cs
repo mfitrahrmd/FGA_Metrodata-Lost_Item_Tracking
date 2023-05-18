@@ -1,5 +1,9 @@
+#region
+
 using Application.DAOs.Account;
 using Domain.Entities;
+
+#endregion
 
 namespace Application.Repositories;
 

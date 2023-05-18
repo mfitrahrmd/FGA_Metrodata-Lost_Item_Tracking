@@ -1,8 +1,12 @@
+#region
+
 using Application.Repositories;
 using Application.Wrappers;
 using AutoMapper;
 using Domain.Common;
 using Microsoft.AspNetCore.Mvc;
+
+#endregion
 
 namespace RESTAPI.Controllers;
 

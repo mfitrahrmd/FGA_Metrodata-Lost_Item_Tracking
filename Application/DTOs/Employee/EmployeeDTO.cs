@@ -1,5 +1,9 @@
+#region
+
 using System.ComponentModel.DataAnnotations;
 using Domain.Enums;
+
+#endregion
 
 namespace Application.DTOs.Employee;
 

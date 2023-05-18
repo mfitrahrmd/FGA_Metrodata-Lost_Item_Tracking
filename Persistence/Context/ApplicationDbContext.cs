@@ -1,8 +1,12 @@
+#region
+
 using System.Reflection;
 using Application.Context;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Action = Domain.Entities.Action;
+
+#endregion
 
 namespace Persistence.Context;
 

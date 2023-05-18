@@ -1,4 +1,5 @@
-using System.Collections.ObjectModel;
+#region
+
 using System.Security.Claims;
 using Application.DTOs.Account;
 using Application.Exceptions;
@@ -6,6 +7,8 @@ using Application.Repositories;
 using AutoMapper;
 using Domain.Entities;
 using Identity.Services;
+
+#endregion
 
 namespace Application.Services.Account;
 

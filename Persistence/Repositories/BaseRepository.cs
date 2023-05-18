@@ -1,6 +1,10 @@
+#region
+
 using Application.Repositories;
 using Domain.Common;
 using Microsoft.EntityFrameworkCore;
+
+#endregion
 
 namespace Persistence.Repositories;
 

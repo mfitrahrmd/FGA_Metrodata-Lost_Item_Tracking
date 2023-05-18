@@ -1,3 +1,5 @@
+#region
+
 using Application.DTOs.Account;
 using Application.DTOs.Action;
 using Application.DTOs.Department;
@@ -7,6 +9,8 @@ using Application.DTOs.Role;
 using AutoMapper;
 using Domain.Entities;
 using Action = Domain.Entities.Action;
+
+#endregion
 
 namespace Application.Mappings;
 
