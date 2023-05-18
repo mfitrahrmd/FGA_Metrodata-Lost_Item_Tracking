@@ -5,6 +5,7 @@ using Application.DTOs.Action;
 using Application.DTOs.Department;
 using Application.DTOs.Employee;
 using Application.DTOs.Item;
+using Application.DTOs.ItemActions;
 using Application.DTOs.Role;
 using AutoMapper;
 using Domain.Entities;
@@ -26,5 +27,7 @@ public class Profiles : Profile
         CreateMap<Item, ItemDTO>();
         CreateMap<Role, RoleDTO>();
         CreateMap<RegisterRequest, Employee>();
+        CreateMap<InsertFoundItemRequest, Item>();
+        CreateMap<ItemActions, ItemActionsDTO>();
     }
 }
