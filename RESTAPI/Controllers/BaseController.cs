@@ -1,5 +1,6 @@
 #region
 
+using System.Net;
 using Application.Repositories;
 using Application.Wrappers;
 using AutoMapper;
@@ -45,5 +46,21 @@ public abstract class BaseController<TEntity, TRepository, TDTO, TInsertOneReq> 
             return NotFound(new FailResponse<string>($"{nameof(TEntity)} was not found with given id."));
 
         return Ok(new SuccessResponse<TDTO>(null, _mapper.Map<TDTO>(entity)));
+    }
+
+    [HttpDelete]
+    [Route("{id}")]
+    public async Task<ActionResult<SuccessResponse>> DeleteOneByIdAsync([FromRoute] Guid id)
+    {
+        try
+        {
+            await Repository.DeleteOneByIdAsync(id);
+
+            return Ok(new SuccessResponse($"{nameof(TEntity)} successfully deleted."));
+        }
+        catch (Exception e)
+        {
+            return StatusCode((int)HttpStatusCode.InternalServerError, new FailResponse<string>("Unexpected server error."));
+        }
     }
 }
