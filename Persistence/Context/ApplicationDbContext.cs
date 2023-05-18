@@ -55,10 +55,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         modelBuilder.Entity<Employee>()
             .HasAlternateKey(e => e.Nik);
         modelBuilder.Entity<Employee>()
-            .HasMany(e => e.Items)
-            .WithOne(i => i.Employee)
-            .HasForeignKey(i => i.EmployeeId);
-        modelBuilder.Entity<Employee>()
             .HasOne<Department>(e => e.Department)
             .WithMany(d => d.Employees)
             .HasForeignKey(e => e.DepartmentId);
@@ -78,10 +74,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .HasColumnType("text");
         modelBuilder.Entity<Item>()
             .HasKey(i => i.Id);
-        modelBuilder.Entity<Item>()
-            .HasOne<Employee>(i => i.Employee)
-            .WithMany(e => e.Items)
-            .HasForeignKey(i => i.EmployeeId);
         modelBuilder.Entity<Item>()
             .HasMany<ItemActions>(i => i.ItemActions)
             .WithOne(ia => ia.Item)

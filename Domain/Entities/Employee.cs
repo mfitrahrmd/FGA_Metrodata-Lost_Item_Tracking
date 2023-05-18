@@ -19,6 +19,5 @@ public class Employee : BaseEntity
     public Guid DepartmentId { get; set; }
     
     public virtual Department? Department { get; set; }
-    public virtual ICollection<Item>? Items { get; set; }
     public virtual Account Account { get; set; }
 }
