@@ -10,4 +10,5 @@ public interface IBaseRepository<TEntity>
     Task DeleteOneAsync(TEntity entity);
     Task<TEntity?> FindOneByIdAsync(Guid id);
     Task<ICollection<TEntity>> FindAllAsync();
+    Task<bool> IsExistAsync(Guid id);
 }
