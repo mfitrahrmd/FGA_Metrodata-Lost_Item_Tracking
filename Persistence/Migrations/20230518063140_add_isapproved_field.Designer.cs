@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence.Context;
 
@@ -11,9 +12,10 @@ using Persistence.Context;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230518063140_add_isapproved_field")]
+    partial class add_isapproved_field
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -188,6 +190,10 @@ namespace Persistence.Migrations
                         .HasColumnType("text")
                         .HasColumnName("image_path");
 
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_approved");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(100)")
@@ -212,10 +218,6 @@ namespace Persistence.Migrations
                     b.Property<Guid>("ActionId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("action_id");
-
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("bit")
-                        .HasColumnName("is_approved");
 
                     b.Property<Guid>("ItemId")
                         .HasColumnType("uniqueidentifier")

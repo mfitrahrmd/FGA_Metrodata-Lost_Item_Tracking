@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence.Context;
 
@@ -11,9 +12,10 @@ using Persistence.Context;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230518083253_remove_isapproved_field_from_item")]
+    partial class remove_isapproved_field_from_item
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -212,10 +214,6 @@ namespace Persistence.Migrations
                     b.Property<Guid>("ActionId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("action_id");
-
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("bit")
-                        .HasColumnName("is_approved");
 
                     b.Property<Guid>("ItemId")
                         .HasColumnType("uniqueidentifier")
