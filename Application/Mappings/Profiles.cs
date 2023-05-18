@@ -1,6 +1,7 @@
 #region
 
 using Application.DTOs.Account;
+using Application.DTOs.AccountRoles;
 using Application.DTOs.Action;
 using Application.DTOs.Department;
 using Application.DTOs.Employee;
@@ -29,5 +30,6 @@ public class Profiles : Profile
         CreateMap<RegisterRequest, Employee>();
         CreateMap<InsertFoundItemRequest, Item>();
         CreateMap<ItemActions, ItemActionsDTO>();
+        CreateMap<AccountRoles, AccountRolesDTO>();
     }
 }
