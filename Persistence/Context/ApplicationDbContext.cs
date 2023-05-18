@@ -110,6 +110,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .HasOne<Action>(ia => ia.Action)
             .WithMany(i => i.ItemActions)
             .HasForeignKey(ia => ia.ActionId);
+        modelBuilder.Entity<ItemActions>()
+            .HasIndex(ia => new { ia.ItemId, ia.ActionId }).IsUnique();
 
         modelBuilder.Entity<Department>()
             .HasKey(d => d.Id);
