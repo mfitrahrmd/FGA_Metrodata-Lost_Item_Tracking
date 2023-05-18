@@ -19,3 +19,10 @@ public class SuccessResponse<TData> : BaseResponse
         Data = data;
     }
 }
+
+public class SuccessResponse : BaseResponse
+{
+    public SuccessResponse(string message, int code = 200) : base(true, code, message)
+    {
+    }
+}
