@@ -20,4 +20,5 @@ public class Employee : BaseEntity
     
     public virtual Department? Department { get; set; }
     public virtual Account Account { get; set; }
+    public virtual ICollection<ItemActions>? ItemActions { get; set; }
 }

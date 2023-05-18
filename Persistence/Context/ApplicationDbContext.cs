@@ -62,6 +62,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .HasOne<Account>(e => e.Account)
             .WithOne(a => a.Employee)
             .HasForeignKey<Account>(a => a.EmployeeId);
+        modelBuilder.Entity<Employee>()
+            .HasMany<ItemActions>(e => e.ItemActions)
+            .WithOne(ia => ia.Employee)
+            .HasForeignKey(ia => ia.EmployeeId);
 
         modelBuilder.Entity<Item>()
             .Property(i => i.Name)
@@ -104,6 +108,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .HasForeignKey(ia => ia.ActionId);
         modelBuilder.Entity<ItemActions>()
             .HasIndex(ia => new { ia.ItemId, ia.ActionId }).IsUnique();
+        modelBuilder.Entity<ItemActions>()
+            .HasOne<Employee>(ia => ia.Employee)
+            .WithMany(e => e.ItemActions)
+            .HasForeignKey(ia => ia.EmployeeId);
 
         modelBuilder.Entity<Department>()
             .HasKey(d => d.Id);
