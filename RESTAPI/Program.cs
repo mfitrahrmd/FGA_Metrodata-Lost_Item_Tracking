@@ -1,6 +1,7 @@
 #region
 
 using Identity;
+using Microsoft.Extensions.FileProviders;
 using Persistence;
 using RESTAPI;
 
@@ -26,6 +27,12 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, builder.Configuration["Application:ItemPhotosPath"])),
+    RequestPath = builder.Configuration["Application:ItemPhotosPath"].Substring(1, builder.Configuration["Application:ItemPhotosPath"].Length - 2)
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
