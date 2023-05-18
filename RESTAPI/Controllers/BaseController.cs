@@ -34,4 +34,16 @@ public abstract class BaseController<TEntity, TRepository, TDTO, TInsertOneReq> 
 
         return Ok(new SuccessResponse<ICollection<TDTO>>(null, _mapper.Map<ICollection<TDTO>>(entities)));
     }
+
+    [HttpGet]
+    [Route("{id}")]
+    public async Task<ActionResult<SuccessResponse<TDTO>>> FindOneByIdAsync([FromRoute] Guid id)
+    {
+        var entity = await Repository.FindOneByIdAsync(id);
+
+        if (entity is null)
+            return NotFound(new FailResponse<string>($"{nameof(TEntity)} was not found with given id."));
+
+        return Ok(new SuccessResponse<TDTO>(null, _mapper.Map<TDTO>(entity)));
+    }
 }
