@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace RESTAPI.Controllers;
 
 [ApiController]
-public class EmployeesController : BaseController<Employee, IEmployeeRepository, EmployeeDTO, InsertOneEmployeeRequest>
+public class EmployeesController : BaseController<Employee, IEmployeeRepository, EmployeeDTO>
 {
     public EmployeesController(IEmployeeRepository repository, IMapper mapper) : base(repository, mapper)
     {

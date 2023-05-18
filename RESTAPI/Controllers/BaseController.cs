@@ -13,11 +13,10 @@ namespace RESTAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public abstract class BaseController<TEntity, TRepository, TDTO, TInsertOneReq> : ControllerBase
+public abstract class BaseController<TEntity, TRepository, TDTO> : ControllerBase
     where TEntity : BaseEntity
     where TRepository : IBaseRepository<TEntity>
     where TDTO : class
-    where TInsertOneReq : class
 {
     protected readonly TRepository Repository;
     private readonly IMapper _mapper;

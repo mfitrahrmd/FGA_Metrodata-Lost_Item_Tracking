@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace RESTAPI.Controllers;
 
 [ApiController]
-public class AccountsController : BaseController<Account, IAccountRepository, AccountDTO, InsertOneAccountRequest>
+public class AccountsController : BaseController<Account, IAccountRepository, AccountDTO>
 {
     private readonly AccountService _accountService;
     
