@@ -1,17 +1,16 @@
-using System.ComponentModel.DataAnnotations;
 using Domain.Enums;
 
-namespace Application.DTOs.Employee;
+namespace Application.DTOs.Account;
 
-public class EmployeeDTO
+public class RegisterRequest
 {
-    public Guid Id { get; set; }
     public string Nik { get; set; }
     public string FirstName { get; set; }
     public string? LastName { get; set; }
     public DateTime BirthDate { get; set; }
-    [EnumDataType(typeof(Gender))] public Gender Gender { get; set; }
+    public Gender Gender { get; set; }
     public string Email { get; set; }
-    public string PhoneNumber { get; set; }
+    public string? PhoneNumber { get; set; }
     public Guid DepartmentId { get; set; }
+    public string Password { get; set; }
 }

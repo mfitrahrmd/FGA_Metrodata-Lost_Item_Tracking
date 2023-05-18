@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,15 +15,8 @@ public class TokenService
         _configuration = configuration;
     }
 
-    public string GenerateAccessToken(Account account)
+    public string GenerateAccessToken(ICollection<Claim> claims)
     {
-        var roleClaims = account.AccountRoles.Select(ar => new Claim(ClaimTypes.Role, ar.Role.Name));
-        var claims = new List<Claim>(new[]
-        {
-            new Claim(ClaimTypes.Sid, account.EmployeeId.ToString())
-        });
-        claims.AddRange(roleClaims);
-
         var tokenOptions = new JwtSecurityToken(
             issuer: _configuration["JWT:Issuer"],
             audience: _configuration["JWT:Audience"],

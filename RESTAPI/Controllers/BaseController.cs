@@ -14,19 +14,19 @@ public abstract class BaseController<TEntity, TRepository, TDTO, TInsertOneReq> 
     where TDTO : class
     where TInsertOneReq : class
 {
-    private readonly TRepository _repository;
+    protected readonly TRepository Repository;
     private readonly IMapper _mapper;
     
     public BaseController(TRepository repository, IMapper mapper)
     {
-        _repository = repository;
+        Repository = repository;
         _mapper = mapper;
     }
 
     [HttpGet]
     public async Task<ActionResult<SuccessResponse<ICollection<TDTO>>>> FindAllAsync()
     {
-        var entities = await _repository.FindAllAsync();
+        var entities = await Repository.FindAllAsync();
 
         return Ok(new SuccessResponse<ICollection<TDTO>>(null, _mapper.Map<ICollection<TDTO>>(entities)));
     }

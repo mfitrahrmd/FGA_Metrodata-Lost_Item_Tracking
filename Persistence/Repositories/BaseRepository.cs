@@ -47,4 +47,9 @@ public class BaseRepository<TEntity, TContext> : IBaseRepository<TEntity>
     {
         return await _set.ToListAsync();
     }
+
+    public async Task<bool> IsExistAsync(Guid id)
+    {
+        return _set.AsNoTracking().Any(e => e.Id.Equals(id));
+    }
 }

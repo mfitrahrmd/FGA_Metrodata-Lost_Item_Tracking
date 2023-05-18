@@ -21,5 +21,6 @@ public class Profiles : Profile
         CreateMap<Department, DepartmentDTO>();
         CreateMap<Item, ItemDTO>();
         CreateMap<Role, RoleDTO>();
+        CreateMap<RegisterRequest, Employee>();
     }
 }
