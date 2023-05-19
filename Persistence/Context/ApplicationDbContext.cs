@@ -166,7 +166,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .HasForeignKey(ar => ar.RoleId);
 
         modelBuilder.Entity<Status>()
-            .HasKey(s => s.Id);
+            .HasKey(s => s.ItemActionsId);
         modelBuilder.Entity<Status>()
             .Property(s => s.Name)
             .HasColumnType("varchar(50)");
@@ -177,6 +177,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .HasOne<ItemActions>(s => s.ItemActions)
             .WithOne(ia => ia.Status)
             .HasForeignKey<Status>(s => s.ItemActionsId);
+        modelBuilder.Entity<Status>()
+            .Ignore(s => s.Id);
         
         
         base.OnModelCreating(modelBuilder);
