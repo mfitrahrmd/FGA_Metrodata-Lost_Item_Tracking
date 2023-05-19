@@ -35,7 +35,7 @@ public class ItemActionsService
         return foundItemAction;
     }
 
-    public async Task<Domain.Entities.ItemActions> AddItemAction(Guid itemId, UserIdentity userIdentity, ActionType actionType)
+    public async Task<Domain.Entities.ItemActions> AddItemAction(Guid itemId, Guid employeeId, ActionType actionType)
     {
         await IsItemExistAsync(itemId);
         
@@ -47,7 +47,7 @@ public class ItemActionsService
             Time = DateTime.Now,
             Action = await _actionRepository.FindOrCreateActionAsync(actionType.ToString()),
             ItemId = foundItem.Id,
-            EmployeeId = userIdentity.Id,
+            EmployeeId = employeeId,
         };
 
         await _itemActionsRepository.InsertOneAsync(newItemActions);
