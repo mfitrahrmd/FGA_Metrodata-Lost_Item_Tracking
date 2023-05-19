@@ -1,3 +1,4 @@
+using Application.DAOs.Item;
 using Application.DTOs.Item;
 using Application.Exceptions;
 using Application.Repositories;
@@ -32,9 +33,9 @@ public class ItemService
         Directory.CreateDirectory(ItemPhotosPath);
     }
 
-    public async Task<Domain.Entities.Item> ReportFoundItem(InsertFoundItemRequest request, UserIdentity userIdentity)
+    public async Task<Domain.Entities.Item> ReportFoundItem(InsertFoundItemRequest request, Guid employeeId)
     {
-        var fileName = await SaveImageAsync(request, userIdentity);
+        var fileName = await SaveImageAsync(request, employeeId);
 
         var newItem = new Domain.Entities.Item
         {
@@ -45,7 +46,7 @@ public class ItemService
             {
                 new()
                 {
-                    EmployeeId = userIdentity.Id,
+                    EmployeeId = employeeId,
                     Time = DateTime.Now,
                     Action = await _actionRepository.FindOrCreateActionAsync(ActionType.Found.ToString())
                 }
@@ -57,7 +58,14 @@ public class ItemService
         return newItem;
     }
 
-    private async Task<string> SaveImageAsync(InsertFoundItemRequest request, UserIdentity userIdentity)
+    public async Task<ICollection<ApprovedFoundItem>> FindAllApprovedFoundItems()
+    {
+        var approvedFoundItems = await _itemRepository.FindAllApprovedFoundItems();
+
+        return approvedFoundItems.ToList();
+    }
+
+    private async Task<string> SaveImageAsync(InsertFoundItemRequest request, Guid employeeId)
     {
         string fileName;
 
@@ -67,7 +75,7 @@ public class ItemService
 
         // file name format : guid~user id who found it~item_found
         fileName =
-            $"{Guid.NewGuid()}~{userIdentity.Id}~item_found~{request.Name}{Path.GetExtension(request.File.FileName)}"
+            $"{Guid.NewGuid()}~{employeeId}~item_found~{request.Name}{Path.GetExtension(request.File.FileName)}"
                 .Replace(" ", "_");
 
         using (var fileStream = new FileStream(Path.Combine(ItemPhotosPath, fileName), FileMode.CreateNew))
