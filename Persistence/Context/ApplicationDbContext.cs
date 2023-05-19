@@ -112,6 +112,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .HasOne<Employee>(ia => ia.Employee)
             .WithMany(e => e.ItemActions)
             .HasForeignKey(ia => ia.EmployeeId);
+        modelBuilder.Entity<ItemActions>()
+            .HasOne<Status>(ia => ia.Status)
+            .WithOne(s => s.ItemActions)
+            .HasForeignKey<Status>(s => s.ItemActionsId);
 
         modelBuilder.Entity<Department>()
             .HasKey(d => d.Id);
@@ -159,6 +163,20 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .HasOne<Role>(ar => ar.Role)
             .WithMany(r => r.AccountRoles)
             .HasForeignKey(ar => ar.RoleId);
+
+        modelBuilder.Entity<Status>()
+            .HasKey(s => s.Id);
+        modelBuilder.Entity<Status>()
+            .Property(s => s.Name)
+            .HasColumnType("varchar(50)");
+        modelBuilder.Entity<Status>()
+            .Property(s => s.Message)
+            .HasColumnType("text");
+        modelBuilder.Entity<Status>()
+            .HasOne<ItemActions>(s => s.ItemActions)
+            .WithOne(ia => ia.Status)
+            .HasForeignKey<Status>(s => s.ItemActionsId);
+        
         
         base.OnModelCreating(modelBuilder);
     }
