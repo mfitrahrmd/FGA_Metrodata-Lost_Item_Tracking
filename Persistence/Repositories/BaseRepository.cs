@@ -12,7 +12,7 @@ public class BaseRepository<TEntity, TContext> : IBaseRepository<TEntity>
     where TEntity : BaseEntity
     where TContext : DbContext
 {
-    private readonly TContext _context;
+    protected readonly TContext _context;
     protected readonly DbSet<TEntity> _set;
 
     public BaseRepository(TContext context)
