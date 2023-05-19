@@ -1,5 +1,6 @@
 #region
 
+using Application.DAOs.Item;
 using Application.DTOs.Account;
 using Application.DTOs.AccountRoles;
 using Application.DTOs.Action;
@@ -31,5 +32,6 @@ public class Profiles : Profile
         CreateMap<InsertFoundItemRequest, Item>();
         CreateMap<ItemActions, ItemActionsDTO>();
         CreateMap<AccountRoles, AccountRolesDTO>();
+        CreateMap<ApprovedFoundItem, FoundItemDTO>();
     }
 }
