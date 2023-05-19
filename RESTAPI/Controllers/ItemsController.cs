@@ -20,14 +20,14 @@ public class ItemsController : ControllerBase
     private readonly IMapper _mapper;
     private readonly ItemService _itemService;
     private readonly ItemActionsService _itemActionsService;
-    
+
     public ItemsController(IMapper mapper, ItemService itemService, ItemActionsService itemActionsService)
     {
         _mapper = mapper;
         _itemService = itemService;
         _itemActionsService = itemActionsService;
     }
-    
+
     [HttpPost]
     [Route("found")]
     public async Task<ActionResult<SuccessResponse<ItemDTO>>> ReportFoundItem([FromForm] InsertFoundItemRequest request)
@@ -35,9 +35,9 @@ public class ItemsController : ControllerBase
         try
         {
             var userIdentity = GetUserIdentityFromClaims(User);
-        
-            var result = await _itemService.ReportFoundItem(request, userIdentity);
-        
+
+            var result = await _itemService.ReportFoundItem(request, userIdentity.Id);
+
             return Ok(new SuccessResponse<ItemDTO>(null, _mapper.Map<ItemDTO>(result)));
         }
         catch (ServiceException e)
@@ -53,7 +53,7 @@ public class ItemsController : ControllerBase
     {
         try
         {
-            var result =  await _itemActionsService.ApproveItemAction(itemId, ActionType.Found);
+            var result = await _itemActionsService.ApproveItemAction(itemId, ActionType.Found);
 
             return Ok(new SuccessResponse<ItemActionsDTO>(null, _mapper.Map<ItemActionsDTO>(result)));
         }
@@ -70,9 +70,9 @@ public class ItemsController : ControllerBase
         try
         {
             var userIdentity = GetUserIdentityFromClaims(User);
-            
-            var result = await _itemActionsService.AddItemAction(itemId, userIdentity, ActionType.RequestClaim);
-            
+
+            var result = await _itemActionsService.AddItemAction(itemId, userIdentity.Id, ActionType.RequestClaim);
+
             return Ok(new SuccessResponse<ItemActionsDTO>(null, _mapper.Map<ItemActionsDTO>(result)));
         }
         catch (ServiceException e)
@@ -80,7 +80,7 @@ public class ItemsController : ControllerBase
             return StatusCode((int)e.ErrorType, new FailResponse<string>(e.Message, (int)e.ErrorType));
         }
     }
-    
+
     [HttpPatch]
     [Route("found/{itemId}/request-claim/approve")]
     [Authorize(Roles = "Admin")]
@@ -88,7 +88,7 @@ public class ItemsController : ControllerBase
     {
         try
         {
-            var result =  await _itemActionsService.ApproveItemAction(itemId, ActionType.RequestClaim);
+            var result = await _itemActionsService.ApproveItemAction(itemId, ActionType.RequestClaim);
 
             return Ok(new SuccessResponse<ItemActionsDTO>(null, _mapper.Map<ItemActionsDTO>(result)));
         }
@@ -101,15 +101,30 @@ public class ItemsController : ControllerBase
     [HttpPost]
     [Route("found/{itemId}/claimed")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<SuccessResponse<ItemActionsDTO>>> UpdateStatusClaimedItem([FromRoute] Guid itemId)
+    public async Task<ActionResult<SuccessResponse<ItemActionsDTO>>> UpdateStatusClaimedItem([FromRoute] Guid itemId, [FromBody] UpdateStatusClaimedItemRequest request)
     {
         try
         {
-            var userIdentity = GetUserIdentityFromClaims(User);
+            var result = await _itemActionsService.AddItemAction(itemId, request.ClaimerId, ActionType.Claimed);
 
-            var result = await _itemActionsService.AddItemAction(itemId, userIdentity, ActionType.Claimed);
-            
             return Ok(new SuccessResponse<ItemActionsDTO>(null, _mapper.Map<ItemActionsDTO>(result)));
+        }
+        catch (ServiceException e)
+        {
+            return StatusCode((int)e.ErrorType, new FailResponse<string>(e.Message, (int)e.ErrorType));
+        }
+    }
+
+    [HttpGet]
+    [Route("found")]
+    public async Task<ActionResult<SuccessResponse<ICollection<FoundItemDTO>>>> FindAllApprovedFoundItems()
+    {
+        try
+        {
+            var result = await _itemService.FindAllApprovedFoundItems();
+
+            return Ok(new SuccessResponse<ICollection<FoundItemDTO>>(null,
+                _mapper.Map<ICollection<FoundItemDTO>>(result)));
         }
         catch (ServiceException e)
         {
