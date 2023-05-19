@@ -24,6 +24,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Role> Roles { get; set; }
     public DbSet<AccountRoles> AccountRoles { get; set; }
+    public DbSet<Status> Status { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

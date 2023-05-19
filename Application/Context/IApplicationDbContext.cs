@@ -18,4 +18,5 @@ public interface IApplicationDbContext
     DbSet<Account> Accounts { get; set; }
     DbSet<Role> Roles { get; set; }
     DbSet<AccountRoles> AccountRoles { get; set; }
+    DbSet<Status> Status { get; set; }
 }
