@@ -18,4 +18,5 @@ public class ItemActions : BaseEntity
     public virtual Item? Item { get; set; }
     public virtual Action? Action { get; set; }
     public virtual Employee? Employee { get; set; }
+    public virtual Status? Status { get; set; }
 }
