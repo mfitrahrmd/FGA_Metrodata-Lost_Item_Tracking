@@ -9,9 +9,9 @@ namespace Application.Repositories;
 public interface IBaseRepository<TEntity>
     where TEntity : BaseEntity
 {
-    Task InsertOneAsync(TEntity entity);
-    Task UpdateOneAsync(TEntity entity);
-    Task DeleteOneByIdAsync(Guid id);
+    Task<TEntity> InsertOneAsync(TEntity entity);
+    Task<TEntity> UpdateOneAsync(TEntity entity);
+    Task<TEntity> DeleteOneByIdAsync(Guid id);
     Task<TEntity?> FindOneByIdAsync(Guid id);
     Task<ICollection<TEntity>> FindAllAsync();
     Task<bool> IsExistAsync(Guid id);

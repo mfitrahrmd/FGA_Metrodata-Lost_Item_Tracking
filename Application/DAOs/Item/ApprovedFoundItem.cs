@@ -2,8 +2,6 @@ using Domain.Entities;
 
 namespace Application.DAOs.Item;
 
-public class ApprovedFoundItem : Domain.Entities.Item
+public class ApprovedFoundItem : FoundItem
 {
-    public DateTime FoundAt { get; set; }
-    public Employee FoundBy { get; set; }
 }

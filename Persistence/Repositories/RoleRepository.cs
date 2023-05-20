@@ -28,7 +28,7 @@ public class RoleRepository : BaseRepository<Role, ApplicationDbContext>, IRoleR
             
             var res = await _set.AddAsync(newRole);
 
-            return newRole;
+            return res.Entity;
         }
 
         return foundRole;

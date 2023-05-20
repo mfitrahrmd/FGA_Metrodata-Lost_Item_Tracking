@@ -21,27 +21,33 @@ public class BaseRepository<TEntity, TContext> : IBaseRepository<TEntity>
         _set = context.Set<TEntity>();
     }
 
-    public async Task InsertOneAsync(TEntity entity)
+    public async Task<TEntity> InsertOneAsync(TEntity entity)
     {
         await _set.AddAsync(entity);
 
         await _context.SaveChangesAsync();
+
+        return entity;
     }
 
-    public async Task UpdateOneAsync(TEntity entity)
+    public async Task<TEntity> UpdateOneAsync(TEntity entity)
     {
         _set.Update(entity);
 
         await _context.SaveChangesAsync();
+
+        return entity;
     }
 
-    public async Task DeleteOneByIdAsync(Guid id)
+    public async Task<TEntity> DeleteOneByIdAsync(Guid id)
     {
         var foundEntity = await _set.FindAsync(id);
 
         _set.Remove(foundEntity);
 
         await _context.SaveChangesAsync();
+
+        return foundEntity;
     }
 
     public async Task<TEntity?> FindOneByIdAsync(Guid id)

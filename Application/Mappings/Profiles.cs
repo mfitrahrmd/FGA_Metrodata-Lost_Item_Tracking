@@ -33,5 +33,6 @@ public class Profiles : Profile
         CreateMap<ItemActions, ItemActionsDTO>();
         CreateMap<AccountRoles, AccountRolesDTO>();
         CreateMap<ApprovedFoundItem, FoundItemDTO>();
+        CreateMap<PendingFoundItem, FoundItemDTO>();
     }
 }
