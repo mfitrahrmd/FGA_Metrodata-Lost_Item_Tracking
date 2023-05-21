@@ -3,6 +3,7 @@ using Application.DTOs.Item;
 using Application.Exceptions;
 using Application.Repositories;
 using Application.Services.Common;
+using Application.Services.ItemActions;
 using Domain.Entities;
 using Microsoft.Extensions.Configuration;
 
@@ -12,24 +13,14 @@ public class ItemService
 {
     private readonly IConfiguration _configuration;
     private readonly IItemRepository _itemRepository;
-    private readonly IActionRepository _actionRepository;
-    private readonly IItemActionsRepository _itemActionsRepository;
-    private readonly IStatusRepository _statusRepository;
+    private readonly ItemActionsService _itemActionsService;
     private string ItemPhotosPath { get; init; }
-    private readonly Status _defaultStatus = new Status
-    {
-        Name = StatusType.Pending.ToString(),
-        Message = "your request is still being reviewed by the admin."
-    };
 
-    public ItemService(IConfiguration configuration, IItemRepository itemRepository, IActionRepository actionRepository,
-        IItemActionsRepository itemActionsRepository, IStatusRepository statusRepository)
+    public ItemService(IConfiguration configuration, IItemRepository itemRepository, ItemActionsService itemActionsService)
     {
         _configuration = configuration;
         _itemRepository = itemRepository;
-        _actionRepository = actionRepository;
-        _itemActionsRepository = itemActionsRepository;
-        _statusRepository = statusRepository;
+        _itemActionsService = itemActionsService;
 
         ItemPhotosPath = _configuration.GetValue<string>("Application:ItemPhotosPath");
 
@@ -41,54 +32,41 @@ public class ItemService
         Directory.CreateDirectory(ItemPhotosPath);
     }
 
-    public async Task<Domain.Entities.Item> ReportFoundItem(InsertFoundItemRequest request, Guid employeeId)
+    public async Task<Domain.Entities.Item> RequestFoundItem(InsertFoundItemRequest request, Guid employeeId)
     {
         var fileName = await SaveImageAsync(request, employeeId);
 
-        var newItem = new Domain.Entities.Item
+        var insertedItem = await _itemRepository.InsertOneAsync(new()
         {
             Name = request.Name,
             Description = request.Description,
             ImagePath = fileName
-        };
-
-        var insertedItem = await _itemRepository.InsertOneAsync(newItem);
-
-        var foundOrCreatedAction = await _actionRepository.FindOrCreateActionAsync(ActionType.Found.ToString());
-
-        var foundOrCreatedStatus = await _statusRepository.FindOrCreateStatusAsync(_defaultStatus);
-
-        await _itemActionsRepository.InsertOneAsync(new Domain.Entities.ItemActions
-        {
-            Time = DateTime.Now,
-            ItemId = insertedItem.Id,
-            ActionId = foundOrCreatedAction.Id,
-            EmployeeId = employeeId,
-            Status = foundOrCreatedStatus
         });
 
-        return newItem;
+        await _itemActionsService.AddItemAction(insertedItem.Id, employeeId, ActionType.RequestFound);
+
+        return insertedItem;
     }
 
-    public async Task<ICollection<ApprovedFoundItem>> FindAllApprovedFoundItems()
+    public async Task<ICollection<ApprovedFoundItem>> FindAllFoundItems()
     {
-        var approvedFoundItems = await _itemRepository.FindAllApprovedFoundItems();
+        var approvedFoundItems = await _itemRepository.FindAllFoundItems();
 
         return approvedFoundItems.ToList();
     }
-    
-    public async Task<ICollection<PendingFoundItem>> FindAllAPendingFoundItems()
-    {
-        var pendingFoundItems = await _itemRepository.FindAllPendingFoundItems();
 
-        return pendingFoundItems.ToList();
+    public async Task<ICollection<RequestFoundItem>> FindAllRequestFoundItems(ActionRequestQuery query)
+    {
+        var requestFoundItems = await _itemRepository.FindAllRequestFoundItems(query);
+
+        return requestFoundItems.ToList();
     }
-    
-    public async Task<ICollection<PendingFoundItemRequestClaim>> FindAllPendingFoundItemRequestClaims()
-    {
-        var pendingFoundItemRequestClaims = await _itemRepository.FindAllPendingFoundItemRequestClaims();
 
-        return pendingFoundItemRequestClaims.ToList();
+    public async Task<ICollection<FoundItemRequestClaim>> FindAllFoundItemRequestClaims(ActionRequestQuery query)
+    {
+        var foundItemRequestClaims = await _itemRepository.FindAllFoundItemRequestClaims(query);
+
+        return foundItemRequestClaims.ToList();
     }
 
     private async Task<string> SaveImageAsync(InsertFoundItemRequest request, Guid employeeId)

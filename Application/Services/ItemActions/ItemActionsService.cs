@@ -25,13 +25,9 @@ public class ItemActionsService
         _statusRepository = statusRepository;
     }
     
-    public async Task<Domain.Entities.Item> ApproveItemAction(Guid itemId, ActionType action, string message)
+    public async Task<Domain.Entities.ItemActions> ApproveItemAction(Guid requestId, string message)
     {
-        await IsItemExistAsync(itemId);
-        
-        var foundItem = await _itemRepository.FindOneByIdAsync(itemId);
-
-        var foundItemAction = await _itemActionsRepository.FindOneByItemIdAndActionName(foundItem.Id, action.ToString());
+        var foundItemAction = await _itemActionsRepository.FindOneByIdAsync(requestId);
 
         if (foundItemAction is null)
             throw new ServiceException(ErrorType.ResourceNotFound, "Item action was not found");
@@ -45,7 +41,7 @@ public class ItemActionsService
         
         await _itemActionsRepository.UpdateOneAsync(foundItemAction);
 
-        return foundItem;
+        return foundItemAction;
     }
     
     public async Task<Domain.Entities.Item> RejectItemAction(Guid itemId, ActionType action, string message)
@@ -78,8 +74,6 @@ public class ItemActionsService
         var foundItem = await _itemRepository.FindOneByIdAsync(itemId);
 
         var foundOrCreatedAction = await _actionRepository.FindOrCreateActionAsync(actionType.ToString());
-        
-        var foundOrCreatedStatus = await _statusRepository.FindOrCreateStatusAsync(actionType.Equals(ActionType.Claimed) ? new Status{Name = StatusType.Approved.ToString()} : _defaultStatus);
 
         var newItemActions = new Domain.Entities.ItemActions
         {
@@ -87,7 +81,7 @@ public class ItemActionsService
             ItemId = foundItem.Id,
             ActionId = foundOrCreatedAction.Id,
             EmployeeId = employeeId,
-            Status = foundOrCreatedStatus,
+            Status = new[] {ActionType.Claimed, ActionType.Found}.Contains(actionType) ? new Status{Name = "Approved", Message = "Approved"} : _defaultStatus,
         };
 
         await _itemActionsRepository.InsertOneAsync(newItemActions);
