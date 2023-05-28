@@ -30,9 +30,16 @@ public class BaseRepository<TEntity, TContext> : IBaseRepository<TEntity>
         return entity;
     }
 
-    public async Task<TEntity> UpdateOneAsync(TEntity entity)
+    public async Task<TEntity> UpdateOneByIdAsync(Guid id, TEntity entity)
     {
-        _set.Update(entity);
+        var foundEntity = await FindOneByIdAsNoTracking(id);
+
+        if (foundEntity is null)
+            throw new Exception($"{typeof(TEntity).Name} with id '{id}' was not found.");
+
+        entity.Id = foundEntity.Id;
+        
+        _context.Set<TEntity>().Update(entity);
 
         await _context.SaveChangesAsync();
 
@@ -63,5 +70,19 @@ public class BaseRepository<TEntity, TContext> : IBaseRepository<TEntity>
     public async Task<bool> IsExistAsync(Guid id)
     {
         return _set.AsNoTracking().Any(e => e.Id.Equals(id));
+    }
+
+    public async Task<TEntity?> FindOneByIdAsNoTracking(Guid id)
+    {
+        var foundEntity = await _set.FindAsync(id);
+
+        if (foundEntity is null)
+        {
+            return null;
+        }
+
+        _context.Entry(foundEntity).State = EntityState.Detached;
+
+        return foundEntity;
     }
 }
