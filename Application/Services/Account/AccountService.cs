@@ -83,7 +83,8 @@ public class AccountService
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Sid, foundEmployee.Id.ToString()),
-            new Claim(ClaimTypes.PrimarySid, foundEmployee.Nik)
+            new Claim(ClaimTypes.PrimarySid, foundEmployee.Nik),
+            new Claim(ClaimTypes.Name, $"{foundEmployee.FirstName} {foundEmployee.LastName}")
         };
         
         claims.AddRange(rolesOfAnAccount.Roles.Select(r => new Claim(ClaimTypes.Role, r)));
