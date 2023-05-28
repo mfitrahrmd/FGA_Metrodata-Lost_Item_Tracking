@@ -1,6 +1,7 @@
 #region
 
 using Application.Repositories;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +27,7 @@ public static class ConfigureServices
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IItemActionsRepository, ItemActionsRepository>();
         services.AddScoped<IStatusRepository, StatusRepository>();
+        services.AddScoped<IAccountRolesRepository, AccountRolesRepository>();
         
         return services;
     }
