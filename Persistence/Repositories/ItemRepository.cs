@@ -40,7 +40,7 @@ public class ItemRepository : BaseRepository<Item, ApplicationDbContext>, IItemR
             using (var cmdResult = cmd.ExecuteReader())
             {
                 ICollection<ApprovedFoundItem> resultList = new List<ApprovedFoundItem>();
-                
+
                 while (cmdResult.Read())
                 {
                     var mapped = new ApprovedFoundItem
@@ -63,10 +63,10 @@ public class ItemRepository : BaseRepository<Item, ApplicationDbContext>, IItemR
                             DepartmentId = (Guid)cmdResult[13]
                         }
                     };
-                    
+
                     resultList.Add(mapped);
                 }
-                
+
                 cmdResult.Close();
 
                 result = resultList;
@@ -78,41 +78,121 @@ public class ItemRepository : BaseRepository<Item, ApplicationDbContext>, IItemR
 
     public async Task<ICollection<RequestFoundItem>> FindAllRequestFoundItems(ActionRequestQuery query)
     {
-        var result = from i in _context.Items
-            join ia in _context.ItemActions on i.Id equals ia.ItemId
-            join a in _context.Actions on ia.ActionId equals a.Id
-            join e in _context.Employees on ia.EmployeeId equals e.Id
-            join s in _context.Status on ia.Id equals s.ItemActionsId
-            where a.Name.Equals(ActionType.RequestFound.ToString()) && (query.Status == null || s.Name.Equals(query.Status))
-            select new RequestFoundItem
-            {
-                RequestId = ia.Id,
-                RequestItem = i,
-                RequestAt = ia.Time,
-                RequestBy = e,
-                Status = s.Name
-            };
 
-        return result.ToList();
+        ICollection<RequestFoundItem> result;
+
+        using (var cmd = _context.Database.GetDbConnection().CreateCommand())
+        {
+            cmd.CommandText =
+                "select i.*, ia.*, s.*, e.* from items i left join item_actions ia on i.id = ia.item_id left join actions a on ia.action_id = a.id left join employees e on ia.employee_id = e.id left join status s on ia.id = s.item_actions_id where a.name = 'RequestFound' and i.name not in (select i.name from items i left join item_actions ia on i.id = ia.item_id left join actions a on ia.action_id = a.id where a.name = 'Found')";
+            cmd.CommandType = CommandType.Text;
+
+            _context.Database.OpenConnection();
+
+            using (var cmdResult = cmd.ExecuteReader())
+            {
+                ICollection<RequestFoundItem> resultList = new List<RequestFoundItem>();
+
+                while (cmdResult.Read())
+                {
+                    var mapped = new RequestFoundItem
+                    {
+                        RequestItem = new Item
+                        {
+                            Id = (Guid)cmdResult[0],
+                            Name = (string)cmdResult[1],
+                            Description = (string)cmdResult[2],
+                            ImagePath = (string)cmdResult[3]
+                        },
+                        RequestId = (Guid)cmdResult[4],
+                        RequestAt = (DateTime)cmdResult[5],
+                        Status = (string)cmdResult[9],
+                        RequestBy = new Employee
+                        {
+                            Id = (Guid)cmdResult[12],
+                            Nik = (string)cmdResult[13],
+                            FirstName = (string)cmdResult[14],
+                            LastName = (string)cmdResult[15],
+                            BirthDate = (DateTime)cmdResult[16],
+                            Gender = (Gender)cmdResult[17],
+                            Email = (string)cmdResult[18],
+                            PhoneNumber = (string)cmdResult[19],
+                            DepartmentId = (Guid)cmdResult[20]
+                        }
+                    };
+
+                    resultList.Add(mapped);
+                }
+
+                cmdResult.Close();
+
+                result = resultList;
+            }
+        }
+
+        result = (from rfi in result where (query.Status == null) || rfi.Status.ToLower().Equals(query.Status.ToLower()) select rfi).ToList();
+
+        return result;
+
     }
 
     public async Task<ICollection<FoundItemRequestClaim>> FindAllFoundItemRequestClaims(ActionRequestQuery query)
     {
-        var result = from i in _context.Items
-            join ia in _context.ItemActions on i.Id equals ia.ItemId
-            join a in _context.Actions on ia.ActionId equals a.Id
-            join e in _context.Employees on ia.EmployeeId equals e.Id
-            join s in _context.Status on ia.Id equals s.ItemActionsId
-            where a.Name.Equals(ActionType.RequestClaim.ToString()) && (query.Status == null || s.Name.Equals(query.Status))
-            select new FoundItemRequestClaim
-            {
-                RequestId = ia.Id,
-                RequestItem = i,
-                RequestAt = ia.Time,
-                RequestBy = e,
-                Status = s.Name
-            };
 
-        return result.ToList();
+
+        ICollection<FoundItemRequestClaim> result;
+
+        using (var cmd = _context.Database.GetDbConnection().CreateCommand())
+        {
+            cmd.CommandText =
+                "select i.*, ia.*, s.*, e.* from items i left join item_actions ia on i.id = ia.item_id left join actions a on ia.action_id = a.id left join employees e on ia.employee_id = e.id left join status s on ia.id = s.item_actions_id where a.name = 'RequestClaim' and i.name not in (select i.name from items i left join item_actions ia on i.id = ia.item_id left join actions a on ia.action_id = a.id where a.name = 'Claimed')";
+            cmd.CommandType = CommandType.Text;
+
+            _context.Database.OpenConnection();
+
+            using (var cmdResult = cmd.ExecuteReader())
+            {
+                ICollection<FoundItemRequestClaim> resultList = new List<FoundItemRequestClaim>();
+
+                while (cmdResult.Read())
+                {
+                    var mapped = new FoundItemRequestClaim
+                    {
+                        RequestItem = new Item
+                        {
+                            Id = (Guid)cmdResult[0],
+                            Name = (string)cmdResult[1],
+                            Description = (string)cmdResult[2],
+                            ImagePath = (string)cmdResult[3]
+                        },
+                        RequestId = (Guid)cmdResult[4],
+                        RequestAt = (DateTime)cmdResult[5],
+                        Status = (string)cmdResult[9],
+                        RequestBy = new Employee
+                        {
+                            Id = (Guid)cmdResult[12],
+                            Nik = (string)cmdResult[13],
+                            FirstName = (string)cmdResult[14],
+                            LastName = (string)cmdResult[15],
+                            BirthDate = (DateTime)cmdResult[16],
+                            Gender = (Gender)cmdResult[17],
+                            Email = (string)cmdResult[18],
+                            PhoneNumber = (string)cmdResult[19],
+                            DepartmentId = (Guid)cmdResult[20]
+                        }
+                    };
+
+                    resultList.Add(mapped);
+                }
+
+                cmdResult.Close();
+
+                result = resultList;
+            }
+        }
+
+        result = (from rfi in result where (query.Status == null) || rfi.Status.ToLower().Equals(query.Status.ToLower()) select rfi).ToList();
+
+        return result;
     }
 }
