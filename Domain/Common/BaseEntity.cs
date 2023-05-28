@@ -2,5 +2,5 @@ namespace Domain.Common;
 
 public abstract class BaseEntity
 {
-    public Guid Id { get; set; }
+    public virtual Guid Id { get; set; }
 }
