@@ -77,9 +77,9 @@ public class ItemService
         if (request.File is null)
             return "";
 
-        // file name format : guid~user id who found it~item_found
+        // file name format : guid~item_found~name
         fileName =
-            $"{Guid.NewGuid()}~{employeeId}~item_found~{request.Name}{Path.GetExtension(request.File.FileName)}"
+            $"{Guid.NewGuid()}~item_found~{request.Name}{Path.GetExtension(request.File.FileName)}"
                 .Replace(" ", "_");
 
         using (var fileStream = new FileStream(Path.Combine(ItemPhotosPath, fileName), FileMode.CreateNew))
