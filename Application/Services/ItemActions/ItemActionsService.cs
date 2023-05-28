@@ -1,3 +1,5 @@
+using Application.DTOs.Item;
+using Application.DTOs.User;
 using Application.Exceptions;
 using Application.Repositories;
 using Application.Services.Common;
@@ -25,46 +27,36 @@ public class ItemActionsService
         _statusRepository = statusRepository;
     }
     
-    public async Task<Domain.Entities.ItemActions> ApproveItemAction(Guid requestId, string message)
+    public async Task<Domain.Entities.Status> ApproveItemAction(Guid requestId, string message)
     {
         var foundItemAction = await _itemActionsRepository.FindOneByIdAsync(requestId);
 
         if (foundItemAction is null)
             throw new ServiceException(ErrorType.ResourceNotFound, "Item action was not found");
 
-        var updatedStatus = await _statusRepository.UpdateOneAsync(new Status
+        var updatedStatus = await _statusRepository.UpdateOneByIdAsync(foundItemAction.Id, new Status
         {
-            ItemActionsId = foundItemAction.Id,
             Name = StatusType.Approved.ToString(),
             Message = message
         });
         
-        await _itemActionsRepository.UpdateOneAsync(foundItemAction);
-
-        return foundItemAction;
+        return updatedStatus;
     }
     
-    public async Task<Domain.Entities.Item> RejectItemAction(Guid itemId, ActionType action, string message)
+    public async Task<Domain.Entities.Status> RejectItemAction(Guid requestId, string message)
     {
-        await IsItemExistAsync(itemId);
-        
-        var foundItem = await _itemRepository.FindOneByIdAsync(itemId);
-
-        var foundItemAction = await _itemActionsRepository.FindOneByItemIdAndActionName(foundItem.Id, action.ToString());
+        var foundItemAction = await _itemActionsRepository.FindOneByIdAsync(requestId);
 
         if (foundItemAction is null)
             throw new ServiceException(ErrorType.ResourceNotFound, "Item action was not found");
 
-        var updatedStatus = await _statusRepository.UpdateOneAsync(new Status
+        var updatedStatus = await _statusRepository.UpdateOneByIdAsync(foundItemAction.Id, new Status
         {
-            ItemActionsId = foundItemAction.Id,
             Name = StatusType.Rejected.ToString(),
             Message = message
         });
         
-        await _itemActionsRepository.UpdateOneAsync(foundItemAction);
-
-        return foundItem;
+        return updatedStatus;
     }
 
     public async Task<Domain.Entities.Item> AddItemAction(Guid itemId, Guid employeeId, ActionType actionType)
@@ -87,6 +79,40 @@ public class ItemActionsService
         await _itemActionsRepository.InsertOneAsync(newItemActions);
 
         return foundItem;
+    }
+
+    public async Task<Domain.Entities.ItemActions> ConfirmStatus(Guid requestId, ActionType action)
+    {
+        var foundItemAction = await _itemActionsRepository.FindOneByIdAsync(requestId);
+
+        var foundOrCreatedAction = await _actionRepository.FindOrCreateActionAsync(action.ToString());
+
+        var newItemActions = new Domain.Entities.ItemActions
+        {
+            Time = DateTime.Now,
+            ItemId = foundItemAction.ItemId,
+            EmployeeId = foundItemAction.EmployeeId,
+            ActionId = foundOrCreatedAction.Id,
+            Status = new Status{Name = "Approved", Message = "Approved"}
+        };
+
+        var insertedItemAction = await _itemActionsRepository.InsertOneAsync(newItemActions);
+
+        return insertedItemAction;
+    }
+    
+    public async Task<ICollection<Domain.Entities.ItemActions>> MyRequestFoundItems(Guid employeeId, ActionRequestQuery query)
+    {
+        var itemActionsList = await _itemActionsRepository.FindAllByActionNameAndEmployeeId(ActionType.RequestFound,employeeId, query);
+
+        return itemActionsList;
+    }
+    
+    public async Task<ICollection<Domain.Entities.ItemActions>> MyRequestClaimItems(Guid employeeId, ActionRequestQuery query)
+    {
+        var itemActionsList = await _itemActionsRepository.FindAllByActionNameAndEmployeeId(ActionType.RequestClaim,employeeId, query);
+
+        return itemActionsList;
     }
     
     private async Task IsItemExistAsync(Guid itemId)
