@@ -55,6 +55,20 @@ public class ItemService
         return approvedFoundItems.ToList();
     }
 
+    public async Task<ICollection<FoundItem>> FindAllFoundItems2()
+    {
+        var foundItems = await _itemRepository.FindAllFoundItems2();
+
+        return foundItems.ToList();
+    }
+    
+    public async Task<ICollection<ApprovedClaimedItem>> FindAllClaimedItems()
+    {
+        var approvedFoundItems = await _itemRepository.FindAllClaimedItems();
+
+        return approvedFoundItems.ToList();
+    }
+
     public async Task<ICollection<RequestFoundItem>> FindAllRequestFoundItems(ActionRequestQuery query)
     {
         var requestFoundItems = await _itemRepository.FindAllRequestFoundItems(query);

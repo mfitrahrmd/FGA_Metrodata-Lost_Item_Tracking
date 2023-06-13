@@ -34,7 +34,9 @@ public class Profiles : Profile
         CreateMap<ItemActions, ItemActionsDTO>();
         CreateMap<AccountRoles, AccountRolesDTO>();
         CreateMap<ApprovedFoundItem, FoundItemDTO>();
+        CreateMap<ApprovedClaimedItem, ClaimedItemDTO>();
         CreateMap<RequestFoundItem, FoundItemDTO>();
+        CreateMap<FoundItem, FoundItemDTO>();
         CreateMap<Status, StatusDTO>().ForMember(sd => sd.Id, expression =>
         {
             expression.MapFrom(s => s.ItemActionsId);

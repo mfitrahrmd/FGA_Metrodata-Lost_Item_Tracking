@@ -11,6 +11,8 @@ namespace Application.Repositories;
 public interface IItemRepository : IBaseRepository<Item>
 {
     Task<ICollection<ApprovedFoundItem>> FindAllFoundItems();
+    Task<ICollection<FoundItem>> FindAllFoundItems2();
+    Task<ICollection<ApprovedClaimedItem>> FindAllClaimedItems();
     Task<ICollection<RequestFoundItem>> FindAllRequestFoundItems(ActionRequestQuery query);
     Task<ICollection<FoundItemRequestClaim>> FindAllFoundItemRequestClaims(ActionRequestQuery query);
 }

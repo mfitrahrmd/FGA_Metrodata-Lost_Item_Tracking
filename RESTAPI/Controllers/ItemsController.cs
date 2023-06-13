@@ -184,6 +184,7 @@ public class ItemsController : BaseController<Domain.Entities.Item, IItemReposit
 
     [HttpGet]
     [Route("found")]
+    [AllowAnonymous]
     public async Task<ActionResult<SuccessResponse<ICollection<FoundItemDTO>>>> FindAllFoundItems()
     {
         try
@@ -193,6 +194,43 @@ public class ItemsController : BaseController<Domain.Entities.Item, IItemReposit
             var data = SetImagePath(_mapper.Map<IList<FoundItemDTO>>(result));
 
             return Ok(new SuccessResponse<ICollection<FoundItemDTO>>(null, data));
+        }
+        catch (ServiceException e)
+        {
+            return StatusCode((int)e.ErrorType, new FailResponse<string>(e.Message, (int)e.ErrorType));
+        }
+    }
+    
+    [HttpGet]
+    [Route("found/all")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<SuccessResponse<ICollection<FoundItemDTO>>>> FindAllFoundItems2()
+    {
+        try
+        {
+            var result = await _itemService.FindAllFoundItems2();
+
+            var data = SetImagePath(_mapper.Map<IList<FoundItemDTO>>(result));
+
+            return Ok(new SuccessResponse<ICollection<FoundItemDTO>>(null, data));
+        }
+        catch (ServiceException e)
+        {
+            return StatusCode((int)e.ErrorType, new FailResponse<string>(e.Message, (int)e.ErrorType));
+        }
+    }
+
+    [HttpGet]
+    [Route("claimed")]
+    public async Task<ActionResult<SuccessResponse<ICollection<ClaimedItemDTO>>>> FindAllClaimedItems()
+    {
+        try
+        {
+            var result = await _itemService.FindAllClaimedItems();
+
+            var data = SetImagePath(_mapper.Map<IList<ClaimedItemDTO>>(result));
+
+            return Ok(new SuccessResponse<ICollection<ClaimedItemDTO>>(null, data));
         }
         catch (ServiceException e)
         {
